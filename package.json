@@ -1,0 +1,11 @@
+{
+  "name": "gpsns",
+  "version": "1.0.0",
+  "description": "GPSを使った写真共有SNS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "matatsuna",
+  "license": "MIT"
+}
