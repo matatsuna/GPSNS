@@ -43,7 +43,7 @@
         <div class="modal-content">
             <h4>Image Upload</h4>
             <div class="row">
-                <form method="post" name="form1" id="form1" action="https://nkmr.io/~matayoshi/work/gpsns/api/upload/index.php">
+                <form method="post" name="form1" id="form1">
                     <div class="col s2">
                         <label for="file_photo" class="center">
                             <i class="large material-icons blue-text text-lighten-2">image</i>
@@ -78,44 +78,39 @@
 
 
     <script>
-
+        let lat = 35.7073985;
+        let lng = 139.66383539999998;
         function initMap() {
             var map = new google.maps.Map(document.getElementById('map'), {
-                center: new google.maps.LatLng(35.7073985, 139.66383539999998),
+                center: new google.maps.LatLng(lat, lng),
                 zoom: 12
             });
             var infoWindow = new google.maps.InfoWindow;
 
-            // Change this depending on the name of your PHP or XML file
-            // downloadUrl('https://nkmr.io/~matayoshi/work/gpsns/api/timeline/index.php', function (data) {
-            //     var xml = data.responseXML;
-            //     var markers = xml.documentElement.getElementsByTagName('marker');
-            //     Array.prototype.forEach.call(markers, function (markerElem) {
-            //         var name = markerElem.getAttribute('name');
-            //         var address = markerElem.getAttribute('address');
-            //         var point = new google.maps.LatLng(
-            //             parseFloat(markerElem.getAttribute('lat')),
-            //             parseFloat(markerElem.getAttribute('lng')));
+            downloadUrl('https://nkmr.io/~matayoshi/work/gpsns/api/timeline/index.php', function (data) {
+                var xml = data.responseXML;
+                var markers = xml.documentElement.getElementsByTagName('marker');
+                Array.prototype.forEach.call(markers, function (markerElem) {
+                    var name = markerElem.getAttribute('name');
+                    var point = new google.maps.LatLng(
+                        parseFloat(markerElem.getAttribute('lat')),
+                        parseFloat(markerElem.getAttribute('lng')));
 
-            //         var infowincontent = document.createElement('div');
-            //         var strong = document.createElement('strong');
-            //         strong.textContent = name
-            //         infowincontent.appendChild(strong);
-            //         infowincontent.appendChild(document.createElement('br'));
-
-            //         var text = document.createElement('text');
-            //         text.textContent = address
-            //         infowincontent.appendChild(text);
-            //         var marker = new google.maps.Marker({
-            //             map: map,
-            //             position: point
-            //         });
-            //         marker.addListener('click', function () {
-            //             infoWindow.setContent(infowincontent);
-            //             infoWindow.open(map, marker);
-            //         });
-            //     });
-            // });
+                    var infowincontent = document.createElement('div');
+                    var img = document.createElement('img');
+                    img.setAttribute('src', 'https://nkmr.io/~matayoshi/work/gpsns/api/upload/img/' + name);
+                    img.setAttribute('width', 640);
+                    infowincontent.appendChild(img);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: point
+                    });
+                    marker.addListener('click', function () {
+                        infoWindow.setContent(infowincontent);
+                        infoWindow.open(map, marker);
+                    });
+                });
+            });
         }
 
         function downloadUrl(url, callback) {
@@ -133,6 +128,7 @@
             request.open('GET', url, true);
             request.send(null);
         }
+        function doNothing() { }
 
         $(document).ready(function () {
             $('.modal').modal();
@@ -149,8 +145,8 @@
                         var data = position.coords;
 
                         // データの整理
-                        var lat = data.latitude;
-                        var lng = data.longitude;
+                        lat = data.latitude;
+                        lng = data.longitude;
                         var alt = data.altitude;
                         var accLatlng = data.accuracy;
                         var accAlt = data.altitudeAccuracy;
@@ -213,7 +209,18 @@
                 }
             );
             $('#img_post').click(() => {
-                $('#form1').submit();
+                let form1 = document.getElementById('form1');
+                fetch('https://nkmr.io/~matayoshi/work/gpsns/api/upload/index.php', {
+                    method: 'POST',
+                    body: new FormData(form1)
+                })
+                    .then(function (response) {
+                        return response.json()
+                    })
+                    .then(function (json) {
+                        console.log(json);// Object {コメント保存したよ: "テスト"}
+                        window.location = "./";
+                    })
             });
         });
     </script>

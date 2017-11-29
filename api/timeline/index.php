@@ -37,10 +37,8 @@ while ($row = @mysql_fetch_assoc($result)){
   $node = $dom->createElement("marker");
   $newnode = $parnode->appendChild($node);
   $newnode->setAttribute("name",$row['name']);
-  $newnode->setAttribute("address", $row['address']);
   $newnode->setAttribute("lat", $row['lat']);
   $newnode->setAttribute("lng", $row['lng']);
-  $newnode->setAttribute("type", $row['type']);
 }
 
 echo $dom->saveXML();
