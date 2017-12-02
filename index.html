@@ -100,9 +100,9 @@
                     var infowincontent = document.createElement('div');
                     var img = document.createElement('img');
                     if (link !== "") {
-                        img.setAttribute('src', link);
+                        img.setAttribute('data-src', link);
                     } else {
-                        img.setAttribute('src', 'https://nkmr.io/~matayoshi/work/gpsns/api/upload/img/' + name);
+                        img.setAttribute('data-src', 'https://nkmr.io/~matayoshi/work/gpsns/api/upload/img/' + name);
                     }
                     img.setAttribute('width', 640);
                     infowincontent.appendChild(img);
@@ -111,6 +111,7 @@
                         position: point
                     });
                     marker.addListener('click', function () {
+                        img.setAttribute('src', img.getAttribute('data-src'));
                         infoWindow.setContent(infowincontent);
                         infoWindow.open(map, marker);
                     });
