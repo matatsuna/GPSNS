@@ -39,6 +39,7 @@ while ($row = @mysql_fetch_assoc($result)){
   $newnode->setAttribute("name",$row['name']);
   $newnode->setAttribute("lat", $row['lat']);
   $newnode->setAttribute("lng", $row['lng']);
+  $newnode->setAttribute("link", $row['link']);
 }
 
 echo $dom->saveXML();
