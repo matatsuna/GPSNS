@@ -92,13 +92,18 @@
                 var markers = xml.documentElement.getElementsByTagName('marker');
                 Array.prototype.forEach.call(markers, function (markerElem) {
                     var name = markerElem.getAttribute('name');
+                    var link = markerElem.getAttribute('link');
                     var point = new google.maps.LatLng(
                         parseFloat(markerElem.getAttribute('lat')),
                         parseFloat(markerElem.getAttribute('lng')));
 
                     var infowincontent = document.createElement('div');
                     var img = document.createElement('img');
-                    img.setAttribute('src', 'https://nkmr.io/~matayoshi/work/gpsns/api/upload/img/' + name);
+                    if (link !== "") {
+                        img.setAttribute('src', link);
+                    } else {
+                        img.setAttribute('src', 'https://nkmr.io/~matayoshi/work/gpsns/api/upload/img/' + name);
+                    }
                     img.setAttribute('width', 640);
                     infowincontent.appendChild(img);
                     var marker = new google.maps.Marker({
