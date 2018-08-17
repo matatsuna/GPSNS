@@ -87,18 +87,17 @@
             });
             var infoWindow = new google.maps.InfoWindow;
 
-            fetch('./api/timeline')
-                .then(function (e) { return e.text() })
-                .then(function (data) {
-                    console.log(data);
-                    var xml = data;
-                    var markers = xml.documentElement.getElementsByTagName('marker');
-                    Array.prototype.forEach.call(markers, function (markerElem) {
-                        var name = markerElem.getAttribute('name');
-                        var link = markerElem.getAttribute('link');
+            fetch('./gpsns_table.json')
+                .then(function (e) { return e.json() })
+                .then(function (json) {
+                    console.log(json);
+                    json.data.forEach(function (_data) {
+                        var name = _data.name;
+                        var link = _data.link;
                         var point = new google.maps.LatLng(
-                            parseFloat(markerElem.getAttribute('lat')),
-                            parseFloat(markerElem.getAttribute('lng')));
+                            parseFloat(_data.lat),
+                            parseFloat(_data.lng)
+                        );
 
                         var infowincontent = document.createElement('div');
                         var img = document.createElement('img');
