@@ -87,36 +87,35 @@
             });
             var infoWindow = new google.maps.InfoWindow;
 
-            downloadUrl('https://nkmr.io/~matayoshi/work/gpsns/api/timeline/index.php', function (data) {
-                var xml = data.responseXML;
-                var markers = xml.documentElement.getElementsByTagName('marker');
-                Array.prototype.forEach.call(markers, function (markerElem) {
-                    var name = markerElem.getAttribute('name');
-                    var link = markerElem.getAttribute('link');
-                    var point = new google.maps.LatLng(
-                        parseFloat(markerElem.getAttribute('lat')),
-                        parseFloat(markerElem.getAttribute('lng')));
+            fetch('./gpsns_table.json')
+                .then(function (e) { return e.json() })
+                .then(function (json) {
+                    json.data.forEach(function (_data) {
+                        var name = _data.name;
+                        var link = _data.link;
+                        var point = new google.maps.LatLng(
+                            parseFloat(_data.lat),
+                            parseFloat(_data.lng)
+                        );
 
-                    var infowincontent = document.createElement('div');
-                    var img = document.createElement('img');
-                    if (link !== "") {
-                        img.setAttribute('data-src', link);
-                    } else {
-                        img.setAttribute('data-src', 'https://nkmr.io/~matayoshi/work/gpsns/api/upload/img/' + name);
-                    }
-                    img.setAttribute('width', 640);
-                    infowincontent.appendChild(img);
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        position: point
-                    });
-                    marker.addListener('click', function () {
-                        img.setAttribute('src', img.getAttribute('data-src'));
-                        infoWindow.setContent(infowincontent);
-                        infoWindow.open(map, marker);
+                        var infowincontent = document.createElement('div');
+                        var img = document.createElement('img');
+                        if (link !== "") {
+                            img.setAttribute('data-src', link);
+                        }
+                        img.setAttribute('width', 640);
+                        infowincontent.appendChild(img);
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: point
+                        });
+                        marker.addListener('click', function () {
+                            img.setAttribute('src', img.getAttribute('data-src'));
+                            infoWindow.setContent(infowincontent);
+                            infoWindow.open(map, marker);
+                        });
                     });
                 });
-            });
         }
 
         function downloadUrl(url, callback) {
@@ -215,18 +214,7 @@
                 }
             );
             $('#img_post').click(() => {
-                let form1 = document.getElementById('form1');
-                fetch('https://nkmr.io/~matayoshi/work/gpsns/api/upload/index.php', {
-                    method: 'POST',
-                    body: new FormData(form1)
-                })
-                    .then(function (response) {
-                        return response.json()
-                    })
-                    .then(function (json) {
-                        console.log(json);// Object {コメント保存したよ: "テスト"}
-                        window.location = "./";
-                    })
+                alert("現在投稿機能を制限しています");
             });
         });
     </script>
